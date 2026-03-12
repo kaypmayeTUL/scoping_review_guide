@@ -96,7 +96,7 @@ The guide contains **10 steps** organized across **4 phases**:
 - [Systematic Review Service](https://libguides.tulane.edu/systematicreviews) — Basic consultations (90 min) and full collaborative partnerships
 - [Databases A–Z](https://library.tulane.edu/resources/databases)
 - [Scoping Reviews LibGuide](https://libguides.tulane.edu/ph/sr)
-- [Tulane IRB](https://irb.tulane.edu/](https://research.tulane.edu/hrpo) — For stakeholder consultation involving human participants
+- [Tulane IRB](https://research.tulane.edu/hrpo) — For stakeholder consultation involving human participants
 
 ---
 
