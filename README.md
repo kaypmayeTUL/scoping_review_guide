@@ -22,9 +22,9 @@ The guide follows established scoping review methodology from:
 
 | File | Description |
 |------|-------------|
-| `scoping_review_guide.html` | Interactive walkthrough guide (open in any browser) |
+| `index.html` | Interactive walkthrough guide (open in any browser) |
 | `scoping_review_search_tracker.xlsx` | Companion spreadsheet for documenting searches and PRISMA flow numbers |
-| `README_scoping_review_guide.md` | This file |
+| `README.md` | This file |
 
 ---
 
