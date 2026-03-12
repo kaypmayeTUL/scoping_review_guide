@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scoping Review Guide | Tulane University Libraries</title>
+<style>
+:root {
+    --green:#285C4D;--green-dk:#1e4a3d;--green-lt:#3a7d6a;
+    --blue:#71C5E8;--blue-lt:#a8ddf2;--blue-pale:#e8f6fb;
+    --shutters:#00778B;--gold:#CC9900;--gold-lt:#fdf6e3;
+    --olive:#658D1B;--olive-lt:#f2f7e8;--verdigris:#71DBD4;
+    --bg:#faf9f7;--surface:#fff;--text:#2c3340;--text-soft:#5a6270;--text-faint:#8a929e;
+    --border:#e4e2de;--radius:10px;--radius-lg:14px;
+    --shadow-sm:0 1px 3px rgba(0,0,0,.06);--shadow-md:0 4px 16px rgba(0,0,0,.07);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+
+/* === TOP NAV === */
+.topbar{position:fixed;top:0;left:0;right:0;background:var(--green-dk);padding:0 16px;display:flex;align-items:center;justify-content:space-between;height:52px;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar-title{color:#fff;font-size:.92rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+.topbar-center{display:flex;align-items:center;gap:10px}
+.topbar select{padding:6px 10px;border:1.5px solid var(--blue);border-radius:6px;background:#fff;color:var(--green-dk);font-size:.85rem;min-width:240px;cursor:pointer}
+.topbar-btns{display:flex;gap:6px}
+.topbar-btn{background:var(--blue);color:var(--green-dk);border:none;padding:6px 14px;border-radius:6px;font-weight:700;cursor:pointer;font-size:.85rem;transition:all .2s}
+.topbar-btn:hover{background:#fff}
+.topbar-btn:disabled{opacity:.35;cursor:not-allowed}
+.topbar-page{color:var(--blue-lt);font-size:.8rem;min-width:60px;text-align:center}
+
+/* Progress bar under topbar */
+.progress-strip{position:fixed;top:52px;left:0;right:0;height:4px;background:rgba(255,255,255,.1);z-index:999}
+.progress-strip-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--verdigris));transition:width .5s ease;border-radius:0 2px 2px 0}
+
+/* === MAIN CONTAINER === */
+.container{margin-top:60px;padding:0 16px 40px;max-width:820px;margin-left:auto;margin-right:auto}
+
+/* === STEP VIEWS === */
+.step-view{display:none;animation:fadeStep .35s ease}.step-view.active{display:block}
+@keyframes fadeStep{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Step header */
+.step-hdr{background:linear-gradient(135deg,var(--green),var(--shutters));color:#fff;padding:36px 32px 28px;border-radius:var(--radius-lg);margin-bottom:24px;position:relative;overflow:hidden}
+.step-hdr::after{content:'';position:absolute;top:-50%;right:-15%;width:350px;height:350px;background:radial-gradient(circle,rgba(113,197,232,.12),transparent 70%);border-radius:50%}
+.step-phase{display:inline-block;background:rgba(255,255,255,.15);padding:3px 12px;border-radius:16px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px}
+.step-hdr h2{font-size:1.7rem;font-weight:700;line-height:1.25;margin-bottom:6px;position:relative;z-index:1}
+.step-hdr p{font-size:.98rem;opacity:.85;max-width:620px;position:relative;z-index:1;margin:0}
+
+/* Step body */
+.step-body{background:var(--surface);border-radius:var(--radius-lg);padding:28px 30px 32px;box-shadow:var(--shadow-md);border:1px solid var(--border)}
+@media(max-width:600px){.step-hdr{padding:24px 20px 20px}.step-hdr h2{font-size:1.4rem}.step-body{padding:20px 18px 24px}}
+
+/* === TYPOGRAPHY === */
+.step-body h3{color:var(--green);font-size:1.2rem;font-weight:700;margin:28px 0 10px;padding-top:6px}
+.step-body h3:first-child{margin-top:0;padding-top:0}
+.step-body p{margin-bottom:12px;font-size:.95rem}
+.step-body ul,.step-body ol{margin:6px 0 14px 20px}
+.step-body li{margin-bottom:5px;font-size:.93rem}
+
+/* === CARDS === */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:12px 0;transition:box-shadow .2s}
+.card:hover{box-shadow:var(--shadow-sm)}
+.card-accent{border-left:4px solid var(--green)}
+.card-tip{background:var(--olive-lt);border-color:#c8dea0;border-left:4px solid var(--olive)}
+.card-warn{background:var(--gold-lt);border-color:#e8d9a0;border-left:4px solid var(--gold)}
+.card-info{background:var(--blue-pale);border-color:#b8dff0;border-left:4px solid var(--shutters)}
+.card h4{font-size:.95rem;font-weight:700;color:var(--green-dk);margin-bottom:5px}
+.card p:last-child{margin-bottom:0}
+.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.card-grid{grid-template-columns:1fr}}
+
+/* === TABLES === */
+table.tbl{width:100%;border-collapse:separate;border-spacing:0;border-radius:var(--radius);overflow:hidden;margin:12px 0;font-size:.9rem;border:1px solid var(--border)}
+table.tbl th{background:var(--green);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:.85rem}
+table.tbl td{padding:9px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+table.tbl tr:last-child td{border-bottom:none}
+table.tbl tr:nth-child(even){background:var(--bg)}
+
+/* === WORKSPACE (interactive sections) === */
+.workspace{background:var(--surface);border:2px solid var(--green);border-radius:var(--radius-lg);padding:24px;margin:20px 0;position:relative}
+.workspace::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--green),var(--shutters));border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.workspace h4{font-size:1.05rem;font-weight:700;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+label.fl{display:block;font-weight:600;font-size:.88rem;color:var(--green-dk);margin:14px 0 3px}
+label.fl:first-of-type{margin-top:0}
+.fh{font-size:.8rem;color:var(--text-faint);margin-bottom:5px;line-height:1.4}
+textarea,input[type="text"],input[type="number"],select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit;font-size:.9rem;color:var(--text);background:var(--bg);transition:all .2s;resize:vertical}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--green);background:#fff;box-shadow:0 0 0 3px rgba(40,92,77,.08)}
+textarea{min-height:72px}
+
+/* Pill checkboxes */
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin:6px 0}
+.pill{display:flex;align-items:center;gap:5px;background:var(--bg);border:1.5px solid var(--border);padding:5px 12px;border-radius:20px;font-size:.82rem;cursor:pointer;transition:all .2s;user-select:none}
+.pill:hover{border-color:var(--green-lt);background:#eef5f2}
+.pill input{display:none}
+.pill.on{background:var(--green);color:#fff;border-color:var(--green)}
+.pill-dot{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;background:#fff;color:transparent;transition:all .2s;flex-shrink:0}
+.pill.on .pill-dot{background:var(--verdigris);border-color:var(--verdigris);color:var(--green-dk)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:7px;font-family:inherit;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .2s;border:none}
+.btn-p{background:var(--green);color:#fff}.btn-p:hover{background:var(--green-dk);transform:translateY(-1px);box-shadow:0 3px 10px rgba(40,92,77,.2)}
+.btn-g{background:transparent;color:var(--green);border:1.5px solid var(--green)}.btn-g:hover{background:var(--green);color:#fff}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+
+/* === FLOW DIAGRAM === */
+.flow{display:flex;flex-direction:column;align-items:center;gap:4px;margin:16px 0}
+.fb{padding:11px 22px;border-radius:var(--radius);text-align:center;font-weight:600;font-size:.88rem;min-width:260px;box-shadow:var(--shadow-sm)}
+.fb-p{background:var(--green);color:#fff}
+.fb-s{background:var(--shutters);color:#fff}
+.fb-h{background:var(--gold);color:var(--green-dk)}
+.fb-o{background:var(--surface);color:var(--green);border:2px solid var(--green)}
+.fa{color:var(--green);font-size:1.1rem;font-weight:bold}
+.fr{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+.fs{background:var(--gold-lt);border:1.5px solid var(--gold);padding:7px 14px;border-radius:7px;font-size:.8rem;text-align:center;min-width:130px}
+
+/* === CHECKLIST === */
+.cl{list-style:none;padding:0;margin:0}
+.cl li{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border);font-size:.9rem;cursor:pointer;transition:background .15s;border-radius:4px}
+.cl li:last-child{border-bottom:none}
+.cl li:hover{background:rgba(40,92,77,.03)}
+.cl input[type="checkbox"]{width:17px;height:17px;accent-color:var(--green);margin-top:2px;flex-shrink:0;cursor:pointer}
+.cl .x{text-decoration:line-through;color:var(--text-faint)}
+.cprog{background:var(--border);border-radius:20px;height:5px;margin:8px 0}
+.cprog-f{height:100%;background:var(--green);border-radius:20px;transition:width .4s ease}
+.ccnt{font-size:.8rem;color:var(--text-faint);text-align:center;margin-top:3px}
+
+/* === PROTOCOL OUTPUT === */
+#proto-out{display:none;margin-top:20px}
+.pdoc{background:var(--surface);border:2px solid var(--green);border-radius:var(--radius-lg);overflow:hidden}
+.pdoc-h{background:var(--green);color:#fff;padding:16px 22px;display:flex;align-items:center;justify-content:space-between;font-weight:600;font-size:1rem}
+.pdoc-b{padding:22px}
+.ps{margin:10px 0;padding:12px 16px;background:var(--bg);border-radius:7px;border-left:3px solid var(--shutters)}
+.ps strong{color:var(--green);font-size:.85rem;display:block;margin-bottom:3px}
+.ps p{font-size:.88rem;margin:0;white-space:pre-wrap}
+.ps-e{color:var(--text-faint);font-style:italic}
+
+/* Step nav bottom */
+.snav{display:flex;justify-content:space-between;align-items:center;padding:24px 0 6px;margin-top:18px;border-top:1px solid var(--border)}
+
+/* Links */
+a{color:var(--shutters);text-decoration:none;transition:color .2s}
+a:hover{color:var(--green)}
+
+/* Tags */
+.tag{display:inline-block;padding:2px 9px;border-radius:16px;font-size:.75rem;font-weight:600}
+.tg{background:#d4edda;color:#155724}.tb{background:#d1ecf1;color:#0c5460}.ty{background:#fff3cd;color:#856404}
+
+/* Print */
+@media print{.topbar,.progress-strip,.snav,.btns,.pitfall-toggle,.save-bar{display:none!important}.container{margin-top:0}.step-view{display:block!important;page-break-after:always}.step-body{box-shadow:none;border:1px solid #ccc}.qref{page-break-inside:avoid}}
+
+/* === PITFALLS TOGGLE === */
+.pitfall-toggle{margin-top:18px}
+.pitfall-btn{display:flex;align-items:center;gap:8px;background:none;border:1.5px solid #e07a5f;color:#e07a5f;padding:8px 16px;border-radius:7px;cursor:pointer;font-family:inherit;font-size:.85rem;font-weight:600;transition:all .2s;width:100%}
+.pitfall-btn:hover{background:#fdf0ed}
+.pitfall-btn .arrow{transition:transform .2s;font-size:.7rem}
+.pitfall-btn .arrow.open{transform:rotate(90deg)}
+.pitfall-body{display:none;margin-top:10px;padding:14px 16px;background:#fdf0ed;border:1px solid #f0c6b8;border-radius:8px;font-size:.9rem}
+.pitfall-body.open{display:block;animation:fadeStep .25s ease}
+.pitfall-body li{margin-bottom:6px;color:#8b3a2a}
+.pitfall-body strong{color:#c0503a}
+
+/* === SAVE BAR === */
+.save-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px 18px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:var(--shadow-sm)}
+.save-bar .save-label{font-size:.85rem;color:var(--text-soft);display:flex;align-items:center;gap:6px}
+.save-bar .save-btns{display:flex;gap:8px}
+.save-bar .sbtn{padding:6px 14px;border-radius:6px;font-size:.82rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);color:var(--text);transition:all .2s;font-family:inherit}
+.save-bar .sbtn:hover{border-color:var(--green);color:var(--green)}
+.save-bar .sbtn-p{background:var(--green);color:#fff;border-color:var(--green)}
+.save-bar .sbtn-p:hover{background:var(--green-dk)}
+.save-status{font-size:.78rem;color:var(--olive);opacity:0;transition:opacity .3s}
+.save-status.show{opacity:1}
+
+/* === TIMELINE ESTIMATOR === */
+.timeline-tool{background:var(--surface);border:2px solid var(--shutters);border-radius:var(--radius-lg);padding:24px;margin:16px 0;position:relative}
+.timeline-tool::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--shutters),var(--blue));border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.timeline-tool h4{font-size:1.05rem;font-weight:700;color:var(--shutters);margin-bottom:14px}
+.tl-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+@media(max-width:600px){.tl-grid{grid-template-columns:1fr}}
+.tl-grid label{font-size:.85rem;font-weight:600;color:var(--green-dk);display:block;margin-bottom:3px}
+.tl-grid select{width:100%;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:.88rem;background:var(--bg)}
+.tl-result{display:none;padding:18px;background:var(--blue-pale);border:1px solid #b8dff0;border-radius:8px}
+.tl-result h5{font-size:.95rem;color:var(--shutters);margin-bottom:10px}
+.tl-phases{display:flex;gap:4px;align-items:stretch;margin-bottom:12px}
+.tl-phase{flex:1;padding:10px 8px;border-radius:6px;text-align:center;font-size:.78rem;font-weight:600;color:#fff;display:flex;flex-direction:column;justify-content:center;min-height:52px}
+.tl-phase span{font-size:.95rem;display:block;margin-top:2px}
+.tl-total{font-size:1rem;font-weight:700;color:var(--green-dk);text-align:center;padding-top:6px;border-top:1px solid var(--border)}
+
+/* === QUICK REFERENCE === */
+.qref{background:var(--surface);border:2px solid var(--green);border-radius:var(--radius-lg);overflow:hidden;margin:20px 0}
+.qref-h{background:var(--green);color:#fff;padding:14px 20px;font-weight:700;font-size:.95rem;display:flex;align-items:center;justify-content:space-between}
+.qref-body{padding:18px 20px}
+.qref-row{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--border);font-size:.88rem}
+.qref-row:last-child{border-bottom:none}
+.qref-label{font-weight:700;color:var(--green);min-width:120px;flex-shrink:0}
+.qref-val{color:var(--text)}
+.qref-empty{color:var(--text-faint);font-style:italic}
+
+/* Carry-forward badge */
+.cf-badge{display:inline-block;font-size:.72rem;background:var(--blue-pale);color:var(--shutters);padding:1px 8px;border-radius:10px;font-weight:600;margin-left:6px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV BAR -->
+<nav class="topbar">
+    <span class="topbar-title">📚 Scoping Review Guide</span>
+    <div class="topbar-center">
+        <button class="topbar-btn" id="prevBtn" onclick="prev()">← Prev</button>
+        <select id="stepSelect" onchange="goTo(+this.value)"></select>
+        <span class="topbar-page" id="pageNum"></span>
+        <button class="topbar-btn" id="nextBtn" onclick="next()">Next →</button>
+    </div>
+</nav>
+<div class="progress-strip"><div class="progress-strip-fill" id="progBar" style="width:0%"></div></div>
+
+<div class="container">
+
+<!-- SAVE/LOAD BAR -->
+<div class="save-bar" id="saveBar">
+    <div class="save-label">💾 Your progress <span class="save-status" id="saveStatus">✓ Saved</span></div>
+    <div class="save-btns">
+        <button class="sbtn sbtn-p" onclick="saveToFile()">Save to File</button>
+        <button class="sbtn" onclick="document.getElementById('loadInput').click()">Load from File</button>
+        <button class="sbtn" onclick="if(confirm('Clear all workspace entries? This cannot be undone.')){saved={};document.querySelectorAll('[data-field]').forEach(e=>e.value='');document.querySelectorAll('.pill.on').forEach(p=>{if(!p.dataset.val.includes('Peer-reviewed'))p.classList.remove('on')});showSaveStatus('Cleared')}">Clear All</button>
+        <input type="file" id="loadInput" accept=".json" style="display:none" onchange="loadFromFile(event)">
+    </div>
+</div>
+
+<!-- ===== STEP 0: WELCOME ===== -->
+<div class="step-view" data-title="Welcome">
+    <div class="step-hdr" style="text-align:center;padding:44px 32px 36px">
+        <h2 style="font-size:2rem">Writing a Scoping Review</h2>
+        <p style="font-size:1.05rem;max-width:560px;margin:8px auto 0">A step-by-step guide for graduate students &amp; researchers in the social sciences &amp; humanities</p>
+        <div style="margin-top:18px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+            <span class="tag tb">PRISMA-ScR</span><span class="tag tg">Covidence</span><span class="tag ty">Arksey &amp; O'Malley</span><span class="tag tb">JBI</span>
+        </div>
+    </div>
+    <div class="step-body">
+        <h3>How This Guide Works</h3>
+        <p>This is a <strong>working companion</strong> — not just a reference. Each step pairs guidance with a workspace where you draft your protocol as you go.</p>
+        <div class="card-grid">
+            <div class="card card-accent"><h4>📖 Guidance</h4><p>Methodology from PRISMA-ScR, Covidence, Arksey &amp; O'Malley, and JBI at each stage.</p></div>
+            <div class="card card-accent"><h4>✍️ Workspaces</h4><p>Fill in your protocol piece by piece. Everything compiles at the end.</p></div>
+            <div class="card card-accent"><h4>💾 Save &amp; Resume</h4><p>Save your progress to a file and load it later. Your work persists across sessions.</p></div>
+            <div class="card card-accent"><h4>📋 Protocol Export</h4><p>Copy, print, or download your compiled protocol on the final step.</p></div>
+        </div>
+
+        <h3>⏱️ How Long Will This Take?</h3>
+        <div class="timeline-tool">
+            <h4>Timeline Estimator</h4>
+            <p style="font-size:.88rem;margin-bottom:14px;color:var(--text-soft)">Get a rough estimate based on your team size and expected scope. These are approximations — actual timelines vary.</p>
+            <div class="tl-grid">
+                <div><label>Team Size</label><select id="tl-team" onchange="calcTimeline()"><option value="1">1 reviewer (pilot only)</option><option value="2" selected>2 reviewers</option><option value="3">3+ reviewers</option></select></div>
+                <div><label>Number of Databases</label><select id="tl-dbs" onchange="calcTimeline()"><option value="3">2–3 databases</option><option value="5" selected>4–6 databases</option><option value="8">7+ databases</option></select></div>
+                <div><label>Expected Results</label><select id="tl-results" onchange="calcTimeline()"><option value="500">Under 500</option><option value="1500" selected>500–2,000</option><option value="4000">2,000–5,000</option><option value="8000">5,000+</option></select></div>
+            </div>
+            <button class="btn btn-p" onclick="calcTimeline()" style="margin-bottom:14px">Estimate Timeline</button>
+            <div class="tl-result" id="tlResult">
+                <h5>Estimated Timeline</h5>
+                <div class="tl-phases" id="tlPhases"></div>
+                <div class="tl-total" id="tlTotal"></div>
+                <p style="font-size:.82rem;color:var(--text-soft);margin:8px 0 0">Based on published guidance from JBI and Covidence. Actual timelines depend on topic complexity, team experience, and scope changes during the process.</p>
+            </div>
+        </div>
+
+        <div class="card card-warn"><h4>💡 Before You Begin</h4><p>Consider meeting with a <a href="https://libguides.tulane.edu/systematicreviews" target="_blank">Tulane librarian</a> early — ideally before finalizing your question. The library offers both 90-minute consultations and full collaborative partnerships.</p></div>
+        <div class="snav"><div></div><button class="btn btn-p" onclick="next()">Get Started →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 1: IS IT RIGHT? ===== -->
+<div class="step-view" data-title="Is a Scoping Review Right?">
+    <div class="step-hdr"><div class="step-phase">Phase 1 · Planning</div><h2>Is a Scoping Review the Right Approach?</h2><p>Confirm this is the best review type for your goals before investing months of work.</p></div>
+    <div class="step-body">
+        <h3>What a Scoping Review Does</h3>
+        <p>A scoping review maps the breadth, nature, and characteristics of evidence on a topic. It identifies key concepts, evidence types, and research gaps — without typically assessing study quality or pooling quantitative results.</p>
+        <h3>Choose a Scoping Review When You Want To</h3>
+        <div class="card-grid">
+            <div class="card card-tip"><h4>Map the landscape</h4><p>Chart what exists on a broad, emerging, or interdisciplinary topic.</p></div>
+            <div class="card card-tip"><h4>Clarify definitions</h4><p>Investigate how key terms are used across disciplines.</p></div>
+            <div class="card card-tip"><h4>Identify gaps</h4><p>Find underexplored populations, methods, or settings.</p></div>
+            <div class="card card-tip"><h4>Precursor to systematic review</h4><p>Determine if a full systematic review is feasible.</p></div>
+        </div>
+        <h3>How It Compares</h3>
+        <table class="tbl">
+            <thead><tr><th>Feature</th><th>Scoping Review</th><th>Systematic Review</th><th>Literature Review</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Question</strong></td><td>Broad (PCC)</td><td>Narrow (PICO)</td><td>Flexible</td></tr>
+                <tr><td><strong>Search</strong></td><td>Comprehensive</td><td>Exhaustive</td><td>Selective</td></tr>
+                <tr><td><strong>Quality appraisal</strong></td><td>Optional</td><td>Required</td><td>Rare</td></tr>
+                <tr><td><strong>Synthesis</strong></td><td>Descriptive charting</td><td>Meta-analysis</td><td>Narrative</td></tr>
+                <tr><td><strong>Standard</strong></td><td>PRISMA-ScR</td><td>PRISMA 2020</td><td>None formal</td></tr>
+                <tr><td><strong>Timeline</strong></td><td>3–9 months</td><td>6–18 months</td><td>Varies</td></tr>
+            </tbody>
+        </table>
+        <div class="workspace"><h4>✍️ Your Decision</h4>
+            <label class="fl">Why is a scoping review the right choice for your project?</label>
+            <div class="fh">This rationale becomes part of your protocol's background section.</div>
+            <textarea id="w-rationale" data-field="rationale" rows="4" placeholder="e.g., My topic crosses multiple disciplines and I need to map how the concept has been defined before narrowing to a specific question..."></textarea>
+        </div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Choosing a scoping review to avoid quality appraisal.</strong> If your real question is about effectiveness, a systematic review may be more appropriate — and reviewers will notice.</li><li><strong>Underestimating scope.</strong> Scoping reviews are not "easier" than systematic reviews. They often cover more sources across more diverse evidence types.</li><li><strong>Starting without a team.</strong> You need at least two independent reviewers for screening. Identify your team before beginning.</li></ul></div></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Research Question →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 2: PCC ===== -->
+<div class="step-view" data-title="Research Question (PCC)">
+    <div class="step-hdr"><div class="step-phase">Phase 1 · Planning</div><h2>Developing Your Research Question</h2><p>Use the PCC framework to frame a broad yet focused inquiry.</p></div>
+    <div class="step-body">
+        <h3>The PCC Framework</h3>
+        <p>Scoping reviews use <strong>PCC — Population, Concept, Context</strong> — rather than PICO. This accommodates broader, more exploratory questions without requiring pre-specified interventions or outcomes.</p>
+        <table class="tbl">
+            <thead><tr><th>Element</th><th>Description</th><th>SSH Example</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Population</strong></td><td>Who is studied?</td><td>First-generation college students</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Core topic or phenomenon</td><td>Sense of belonging in higher education</td></tr>
+                <tr><td><strong>Context</strong></td><td>Setting, geography, time</td><td>U.S. four-year institutions, 2010–present</td></tr>
+            </tbody>
+        </table>
+        <h3>Worked Framework Examples</h3>
+        <p>Below are full PCC breakdowns across SSH disciplines. Each shows how the framework translates into a research question and initial search terms. Click any example to auto-fill the workspace below.</p>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('K-12 teachers','culturally responsive pedagogy','K-12 settings in North America, 2010–present')">
+            <h4>Education — Culturally Responsive Teaching</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>K-12 teachers</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Culturally responsive pedagogy — how it is defined, implemented, and assessed</td></tr>
+                <tr><td><strong>Context</strong></td><td>K-12 settings in North America, 2010–present</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> What is known about how culturally responsive pedagogy is defined, implemented, and assessed among K-12 teachers in North American schools?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("culturally responsive" OR "culturally sustaining" OR "culturally relevant") AND ("pedagogy" OR "teaching" OR "instruction") AND ("K-12" OR "elementary" OR "secondary" OR "primary school")</p>
+        </div>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('formerly incarcerated adults','reentry housing interventions','urban areas in the United States')">
+            <h4>Social Work — Reentry &amp; Housing</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>Formerly incarcerated adults</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Reentry housing interventions — types, delivery models, and reported outcomes</td></tr>
+                <tr><td><strong>Context</strong></td><td>Urban areas in the United States</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> What interventions have been studied for housing instability during community reentry among formerly incarcerated adults in urban U.S. settings?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("reentry" OR "reintegration" OR "post-incarceration" OR "ex-offender") AND ("housing" OR "homelessness" OR "shelter" OR "transitional housing") AND ("urban" OR "city" OR "metropolitan")</p>
+        </div>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('youth ages 12–25','digital citizenship','global contexts, published in English')">
+            <h4>Sociology — Digital Citizenship</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>Youth ages 12–25</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Digital citizenship — conceptual definitions, measurement instruments, and theoretical frameworks</td></tr>
+                <tr><td><strong>Context</strong></td><td>Global contexts, published in English</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> How has digital citizenship been conceptualized, defined, and measured among youth across global contexts?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("digital citizenship" OR "digital civic*" OR "online civic engagement" OR "e-citizenship") AND ("youth" OR "adolescent*" OR "young people" OR "teenager*")</p>
+        </div>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('low-income communities','community land trust models','U.S. Southern states, 2000–present')">
+            <h4>Public Policy — Community Land Trusts</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>Low-income communities</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Community land trust (CLT) models — governance structures, affordability outcomes, and community impact</td></tr>
+                <tr><td><strong>Context</strong></td><td>U.S. Southern states, 2000–present</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> What evidence exists on community land trust models for affordable housing among low-income communities in the U.S. South?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("community land trust*" OR "CLT" OR "shared equity") AND ("affordable housing" OR "homeownership" OR "land tenure") AND ("southern" OR "southeast" OR "Gulf Coast" OR specific state names)</p>
+        </div>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('academic librarians','data literacy instruction','LIS programs and academic libraries, North America')">
+            <h4>Library &amp; Information Science — Data Literacy</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>Academic librarians</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Data literacy instruction — curricula, pedagogical approaches, and competency frameworks</td></tr>
+                <tr><td><strong>Context</strong></td><td>LIS programs and academic libraries, North America</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> What approaches to data literacy instruction have been described among academic librarians in North American LIS programs and academic libraries?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("data literacy" OR "data information literacy" OR "data competenc*" OR "statistical literacy") AND ("librarian*" OR "library instruction" OR "information literacy") AND ("academic librar*" OR "LIS education" OR "university")</p>
+        </div>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('refugees and asylum seekers','mental health service access and utilization','resettlement countries in Europe and North America, 2015–present')">
+            <h4>Psychology / Migration Studies — Refugee Mental Health</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>Refugees and asylum seekers</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Mental health service access and utilization — barriers, facilitators, and service models</td></tr>
+                <tr><td><strong>Context</strong></td><td>Resettlement countries in Europe and North America, 2015–present</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> What is known about barriers to and facilitators of mental health service access among refugees and asylum seekers in European and North American resettlement countries since 2015?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("refugee*" OR "asylum seeker*" OR "forced migra*" OR "displaced person*") AND ("mental health" OR "psychological" OR "psychiatric" OR "counseling") AND ("access" OR "utilization" OR "barrier*" OR "help-seeking")</p>
+        </div>
+
+        <div class="card card-info" style="cursor:pointer" onclick="fillExample('Black and Indigenous communities','environmental justice policy frameworks','United States, post-Civil Rights era')">
+            <h4>Environmental Humanities / Political Science — Environmental Justice</h4>
+            <table class="tbl" style="margin:8px 0">
+                <tr><td style="width:90px"><strong>Population</strong></td><td>Black and Indigenous communities</td></tr>
+                <tr><td><strong>Concept</strong></td><td>Environmental justice policy frameworks — legislative approaches, community-driven models, and enforcement mechanisms</td></tr>
+                <tr><td><strong>Context</strong></td><td>United States, post-Civil Rights era</td></tr>
+            </table>
+            <p style="margin:6px 0 4px"><strong>Question:</strong> What policy frameworks for environmental justice have been documented for Black and Indigenous communities in the U.S. from the post-Civil Rights era to the present?</p>
+            <p style="font-size:.85rem;color:var(--text-soft)"><strong>Sample terms:</strong> ("environmental justice" OR "environmental racism" OR "climate justice") AND ("policy" OR "legislation" OR "regulation" OR "framework") AND ("Black" OR "African American" OR "Indigenous" OR "Native American")</p>
+        </div>
+
+        <p style="margin-top:14px;font-size:.88rem;color:var(--text-soft)">💡 <strong>Click any example above</strong> to auto-fill the workspace below with that framework as a starting point.</p>
+        <div class="workspace"><h4>✍️ Build Your PCC Question</h4>
+            <label class="fl">Population</label>
+            <div class="fh">Who is being studied? (e.g., refugees, rural educators, caregivers)</div>
+            <input type="text" id="w-pcc-pop" data-field="pcc_pop" placeholder="Enter your population...">
+            <label class="fl">Concept</label>
+            <div class="fh">Core topic or phenomenon (e.g., digital literacy, trauma-informed care)</div>
+            <input type="text" id="w-pcc-concept" data-field="pcc_concept" placeholder="Enter your concept...">
+            <label class="fl">Context</label>
+            <div class="fh">Setting, geography, time (e.g., community colleges in the U.S., post-2015)</div>
+            <input type="text" id="w-pcc-context" data-field="pcc_context" placeholder="Enter your context...">
+            <div class="btns"><button class="btn btn-p" onclick="genPCC()">Generate Draft Question</button></div>
+            <div id="pcc-out" style="margin-top:12px;display:none;padding:14px;background:var(--olive-lt);border-radius:8px;border-left:4px solid var(--olive)"></div>
+            <label class="fl" style="margin-top:18px">Refined Research Question</label>
+            <textarea id="w-question" data-field="question" rows="2" placeholder="Write or refine your question here..."></textarea>
+        </div>
+        <div class="card card-warn"><h4>💡 Iteration Is Expected</h4><p>Your question will evolve as you learn the literature. Arksey &amp; O'Malley note this process is iterative — refining your PCC after preliminary searching is normal.</p></div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Question too broad.</strong> "What is known about mental health?" will return thousands of irrelevant results. Every PCC element should meaningfully narrow scope.</li><li><strong>Question too narrow.</strong> If you can only find 5–10 sources in a preliminary search, your question may be better suited to a focused systematic review.</li><li><strong>Conflating PCC with PICO.</strong> Scoping reviews don't need a specific intervention or comparator. If you find yourself writing those in, reconsider your review type.</li><li><strong>Skipping preliminary searching.</strong> Run test searches in 1–2 databases before finalizing your PCC to check that the volume and relevance are manageable.</li></ul></div></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Eligibility Criteria →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 3: ELIGIBILITY ===== -->
+<div class="step-view" data-title="Eligibility Criteria">
+    <div class="step-hdr"><div class="step-phase">Phase 1 · Planning</div><h2>Defining Eligibility Criteria</h2><p>Decide what's in and what's out — before you start screening.</p></div>
+    <div class="step-body">
+        <h3>Why This Matters</h3>
+        <p>Clear criteria ensure multiple reviewers apply the same standards. They should flow directly from your PCC elements.</p>
+        <h3>Key Decisions for SSH Reviews</h3>
+        <div class="card-grid">
+            <div class="card"><h4>Source Types</h4><p>Scoping reviews can include peer-reviewed articles, grey literature, policy docs, theses, and more. Define which and why.</p></div>
+            <div class="card"><h4>Date Range</h4><p>Narrow for emerging topics; broader for conceptual mapping.</p></div>
+            <div class="card"><h4>Language</h4><p>English-only is common but should be noted as a limitation.</p></div>
+            <div class="card"><h4>Study Design</h4><p>Scoping reviews typically welcome all methodologies: quantitative, qualitative, mixed, theoretical.</p></div>
+        </div>
+        <div class="workspace"><h4>✍️ Draft Your Criteria</h4>
+            <label class="fl">Inclusion Criteria</label>
+            <div class="fh">What must a source have to be included?</div>
+            <textarea id="w-inclusion" data-field="inclusion" rows="4" placeholder="e.g., Sources addressing [concept] among [population] in [context], published 2010–2025, in English..."></textarea>
+            <label class="fl">Exclusion Criteria</label>
+            <div class="fh">What specifically disqualifies a source?</div>
+            <textarea id="w-exclusion" data-field="exclusion" rows="4" placeholder="e.g., Editorials without original data, clinical-only studies, non-English..."></textarea>
+            <label class="fl">Source Types to Include <span style="font-weight:400;color:var(--text-faint)">(click to toggle)</span></label>
+            <div class="pills" id="srcTypes">
+                <div class="pill on" data-val="Peer-reviewed articles" onclick="togPill(this)"><span class="pill-dot">✓</span> Peer-reviewed articles</div>
+                <div class="pill" data-val="Grey literature / reports" onclick="togPill(this)"><span class="pill-dot">✓</span> Grey literature</div>
+                <div class="pill" data-val="Theses & dissertations" onclick="togPill(this)"><span class="pill-dot">✓</span> Theses &amp; dissertations</div>
+                <div class="pill" data-val="Conference proceedings" onclick="togPill(this)"><span class="pill-dot">✓</span> Conference proceedings</div>
+                <div class="pill" data-val="Policy documents" onclick="togPill(this)"><span class="pill-dot">✓</span> Policy documents</div>
+                <div class="pill" data-val="Books / book chapters" onclick="togPill(this)"><span class="pill-dot">✓</span> Books / chapters</div>
+                <div class="pill" data-val="Preprints" onclick="togPill(this)"><span class="pill-dot">✓</span> Preprints</div>
+            </div>
+            <label class="fl">Date Range</label>
+            <div style="display:flex;gap:10px;align-items:center">
+                <input type="number" id="w-date-start" data-field="date_start" placeholder="Start" min="1900" max="2026" style="width:110px">
+                <span style="color:var(--text-faint)">to</span>
+                <input type="number" id="w-date-end" data-field="date_end" placeholder="End" min="1900" max="2026" style="width:110px">
+            </div>
+            <label class="fl">Language(s)</label>
+            <input type="text" id="w-language" data-field="language" placeholder="e.g., English only" style="max-width:260px">
+        </div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Vague criteria.</strong> "Relevant studies" is not a criterion. Each element should be testable — could two reviewers independently apply it and agree?</li><li><strong>Excluding grey literature without justification.</strong> Scoping reviews benefit from broad source types. If you limit to peer-reviewed only, acknowledge this as a limitation.</li><li><strong>Forgetting language limits.</strong> English-only is practical but introduces bias. State it explicitly in your protocol.</li><li><strong>Not aligning criteria to PCC.</strong> Every inclusion criterion should map to a PCC element. If it doesn't, reconsider whether it belongs.</li></ul></div></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Search Strategy →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 4: SEARCH ===== -->
+<div class="step-view" data-title="Search Strategy">
+    <div class="step-hdr"><div class="step-phase">Phase 2 · Searching</div><h2>Developing Your Search Strategy</h2><p>A comprehensive, reproducible search is the backbone of your review.</p></div>
+    <div class="step-body">
+        <h3>From PCC to Search Terms</h3>
+        <p>Each PCC element generates search terms. Use subject headings, synonyms, and related terms. Combine <strong>within</strong> concepts using OR, <strong>between</strong> concepts using AND.</p>
+        <h3>Key Databases for SSH</h3>
+        <table class="tbl">
+            <thead><tr><th>Database</th><th>Strengths</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Web of Science (SSCI)</strong></td><td>Multidisciplinary, citation tracking</td></tr>
+                <tr><td><strong>Scopus</strong></td><td>Broad SSH coverage</td></tr>
+                <tr><td><strong>Sociological Abstracts</strong></td><td>Sociology, social work</td></tr>
+                <tr><td><strong>PsycINFO</strong></td><td>Psychology, education, behavioral</td></tr>
+                <tr><td><strong>ERIC</strong></td><td>Education research</td></tr>
+                <tr><td><strong>JSTOR</strong></td><td>Humanities &amp; SSH archives</td></tr>
+                <tr><td><strong>ProQuest Dissertations</strong></td><td>Grey literature: theses</td></tr>
+            </tbody>
+        </table>
+        <p>Access these through <a href="https://library.tulane.edu/resources/databases" target="_blank">Tulane's database portal →</a></p>
+        <div class="workspace"><h4>✍️ Map Your Search Terms</h4>
+            <label class="fl">Population Terms <span class="cf-badge">auto-filled from PCC</span></label>
+            <textarea id="w-search-pop" data-field="search_pop" rows="2" placeholder='"graduate students" OR "doctoral students" OR "postgraduate"'></textarea>
+            <label class="fl">Concept Terms <span class="cf-badge">auto-filled from PCC</span></label>
+            <textarea id="w-search-concept" data-field="search_concept" rows="2" placeholder='"academic mentorship" OR "faculty mentoring" OR "advisor-advisee"'></textarea>
+            <label class="fl">Context Terms <span class="cf-badge">auto-filled from PCC</span></label>
+            <textarea id="w-search-context" data-field="search_context" rows="2" placeholder='"United States" OR "American" (or leave blank if no geographic limit)'></textarea>
+            <div class="btns"><button class="btn btn-p" onclick="previewSearch()">Preview Search String</button></div>
+            <div id="search-out" style="margin-top:12px;display:none;padding:14px;background:var(--green-dk);color:var(--blue);border-radius:8px;font-family:monospace;font-size:.85rem;white-space:pre-wrap"></div>
+            <label class="fl" style="margin-top:16px">Databases &amp; Supplementary Sources</label>
+            <textarea id="w-databases" data-field="databases" rows="3" placeholder="List databases and supplementary search methods (backward/forward citation searching, grey literature repositories, expert consultation)..."></textarea>
+        </div>
+        <div class="card card-tip"><h4>🤝 Tulane Librarian Support</h4><p><a href="https://libguides.tulane.edu/systematicreviews" target="_blank">Systematic Review Service</a> — basic consultations (90 min) or full partnerships with co-authorship. <a href="https://library.tulane.edu/spotlight/creating-scoping-systematic-reviews" target="_blank">View workshops →</a></p></div>
+
+        <h3>Managing Citations with Zotero or EndNote</h3>
+        <p>A citation manager is essential for organizing your search results, deduplicating across databases, and exporting citations to screening tools. Start using one <em>before</em> you run your first search.</p>
+        <div class="card-grid">
+            <div class="card card-accent">
+                <h4>Zotero (Free, Open Source)</h4>
+                <p>Works across platforms with browser integration for one-click saving. Strong group library features for team reviews. Exports to RIS, CSV, and BibTeX for import into Covidence/Rayyan.</p>
+                <p><a href="https://www.zotero.org/" target="_blank">Download Zotero →</a></p>
+                <p style="font-size:.85rem;color:var(--text-soft)"><strong>Tip:</strong> Create a dedicated collection for your review, with sub-collections for each database search. Use tags to track screening status if not using Covidence.</p>
+            </div>
+            <div class="card card-accent">
+                <h4>EndNote (Licensed)</h4>
+                <p>Powerful deduplication features — especially useful when merging results from many databases. Handles large libraries well. Direct export to Covidence and other review tools.</p>
+                <p><a href="https://libguides.tulane.edu/" target="_blank">Available through Tulane →</a></p>
+                <p style="font-size:.85rem;color:var(--text-soft)"><strong>Tip:</strong> Use EndNote's "Find Duplicates" before exporting to Covidence for an initial dedup pass. Covidence will catch remaining duplicates automatically.</p>
+            </div>
+        </div>
+        <div class="card card-info">
+            <h4>Citation Manager Workflow for Scoping Reviews</h4>
+            <p><strong>1.</strong> Run your search in each database → <strong>2.</strong> Export results (.RIS format preferred) → <strong>3.</strong> Import into Zotero/EndNote, organizing by database → <strong>4.</strong> Run initial deduplication → <strong>5.</strong> Export combined, deduplicated set → <strong>6.</strong> Import into Covidence or Rayyan for screening</p>
+            <p style="margin-top:8px;font-size:.88rem">Keep your citation manager library as a permanent archive of all search results. Even after screening, you may need to return to excluded citations if your criteria change.</p>
+        </div>
+
+        <h3>📥 Search Tracking Document</h3>
+        <p>Documenting every search is required by PRISMA-ScR. Use the companion spreadsheet to track your searches, citation counts, and PRISMA flow numbers:</p>
+        <div class="card card-warn" style="border-left-width:6px">
+            <h4>📎 Companion File: <em>scoping_review_search_tracker.xlsx</em></h4>
+            <p>This spreadsheet was provided alongside this guide. It includes four worksheets:</p>
+            <ul style="margin:8px 0 0 18px">
+                <li><strong>Search Log</strong> — Database, date, exact search string, # results</li>
+                <li><strong>Citation Tracking</strong> — Imports and deduplication counts by source (auto-totals)</li>
+                <li><strong>Full-Text Exclusions</strong> — Exclusion reasons log for each removed source</li>
+                <li><strong>PRISMA Flow Numbers</strong> — Auto-calculated counts for your flow diagram</li>
+            </ul>
+            <p style="margin-top:10px;font-size:.85rem;color:var(--text-soft)">Look for <strong>scoping_review_search_tracker.xlsx</strong> in the same location where you downloaded this guide.</p>
+        </div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Searching only one database.</strong> PRISMA-ScR and JBI require minimum 2–3 discipline-specific databases plus supplementary sources.</li><li><strong>Not documenting searches.</strong> Every search must be logged with database, date, exact string, and results count. The tracker spreadsheet helps.</li><li><strong>Ignoring controlled vocabulary.</strong> Database-specific subject headings (MeSH, thesaurus terms) dramatically improve recall. Work with a librarian.</li><li><strong>Not iterating.</strong> Your first search won't be perfect. Expect 3–5 rounds of refinement per database before finalizing.</li><li><strong>Skipping grey literature.</strong> For SSH reviews, government reports, theses, and policy documents are often critical evidence.</li></ul></div></div>
+        <div class="card card-warn"><h4>📌 Document Everything</h4><p>Record every search: database, date, exact string, results count. Required by PRISMA-ScR Item 8.</p></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Screening →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 5: SCREENING ===== -->
+<div class="step-view" data-title="Screening Sources">
+    <div class="step-hdr"><div class="step-phase">Phase 2 · Searching</div><h2>Screening Sources</h2><p>Apply your eligibility criteria systematically with at least two independent reviewers.</p></div>
+    <div class="step-body">
+        <h3>The Two-Phase Process</h3>
+        <div class="flow">
+            <div class="fb fb-p">Export citations (.RIS / .XML) from databases</div><div class="fa">↓</div>
+            <div class="fb fb-s">Import → Covidence or Rayyan → Auto-deduplication</div><div class="fa">↓</div>
+            <div class="fb fb-p">Phase 1: Title / Abstract Screening</div><div class="fa">↓</div>
+            <div class="fr"><div class="fb fb-s" style="min-width:200px">Resolve Conflicts</div><div class="fs">Pilot first 25–50 to calibrate</div></div><div class="fa">↓</div>
+            <div class="fb fb-p">Phase 2: Full-Text Screening</div><div class="fa">↓</div>
+            <div class="fb fb-h">Included Sources → Data Charting</div>
+        </div>
+        <h3>Key Features of Covidence</h3>
+        <div class="card-grid">
+            <div class="card card-tip"><h4>Blind Screening</h4><p>Reviewers vote independently (Yes/No/Maybe).</p></div>
+            <div class="card card-tip"><h4>Keyword Highlighting</h4><p>Criteria displayed during screening.</p></div>
+            <div class="card card-tip"><h4>Conflict Resolution</h4><p>Disagreements flagged for third reviewer.</p></div>
+            <div class="card card-tip"><h4>PRISMA Flow Diagram</h4><p>Auto-generated from screening data.</p></div>
+        </div>
+        <div class="card card-info"><h4>Free Alternative: Rayyan</h4><p><a href="https://www.rayyan.ai/" target="_blank">Rayyan</a> offers free screening with AI-assisted features and blinded review. Check with your <a href="https://libguides.tulane.edu/systematicreviews" target="_blank">Tulane librarian</a> about institutional access to either tool.</p></div>
+        <div class="workspace"><h4>✍️ Describe Your Screening Plan</h4>
+            <label class="fl">Screening Process <span class="cf-badge">criteria carried from eligibility</span></label>
+            <div class="fh">How many reviewers? What tool? Pilot screening plan? Conflict resolution?</div>
+            <textarea id="w-screening" data-field="screening" rows="5" placeholder="e.g., Two reviewers will independently screen all titles/abstracts using Covidence. We will pilot the first 50 citations together to calibrate. Conflicts resolved by discussion; a third reviewer adjudicates if needed..."></textarea>
+        </div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Single reviewer screening.</strong> This is the most common methodological weakness cited by peer reviewers. Always use at least two independent screeners.</li><li><strong>Not piloting.</strong> Screening the first 25–50 titles together calibrates your team and catches criteria ambiguities early — before you've screened hundreds.</li><li><strong>Not recording full-text exclusion reasons.</strong> These are required for the PRISMA flow diagram. Track them during screening, not retroactively.</li><li><strong>Being too liberal or conservative.</strong> When uncertain at title/abstract stage, include it — you can exclude at full text with a documented reason.</li></ul></div></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Data Charting →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 6: CHARTING ===== -->
+<div class="step-view" data-title="Data Charting">
+    <div class="step-hdr"><div class="step-phase">Phase 3 · Analysis</div><h2>Data Charting (Extraction)</h2><p>Record key information from each included source into a standardized form.</p></div>
+    <div class="step-body">
+        <h3>Charting, Not Extracting</h3>
+        <p>The goal is to <em>map</em> the evidence landscape, not extract data for statistical pooling. Pilot your charting form on 3–5 sources and refine iteratively.</p>
+        <h3>Common Variables</h3>
+        <table class="tbl">
+            <thead><tr><th>Category</th><th>Variables</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Bibliographic</strong></td><td>Author(s), year, title, source, country</td></tr>
+                <tr><td><strong>Study</strong></td><td>Design, framework, sample size</td></tr>
+                <tr><td><strong>Population</strong></td><td>Demographics, characteristics</td></tr>
+                <tr><td><strong>Concept</strong></td><td>How defined, operationalized, measured</td></tr>
+                <tr><td><strong>Context</strong></td><td>Setting, geography, discipline</td></tr>
+                <tr><td><strong>Findings</strong></td><td>Main outcomes, themes, arguments</td></tr>
+                <tr><td><strong>Gaps</strong></td><td>Limitations, future research noted</td></tr>
+            </tbody>
+        </table>
+        <div class="card card-info"><h4>Covidence Extraction</h4><p>Build custom templates with text fields, dropdowns, and structured sections. Export to CSV for analysis. See <a href="https://www.covidence.org/blog/how-to-get-started-with-a-scoping-review/" target="_blank">Covidence's guide →</a></p></div>
+        <div class="workspace"><h4>✍️ Design Your Charting Form</h4>
+            <label class="fl">Variables to Extract</label>
+            <div class="fh">List each variable. What will your results tables look like?</div>
+            <textarea id="w-chart-vars" data-field="charting_vars" rows="8" placeholder="Author(s) and year&#10;Title&#10;Source type&#10;Country / region&#10;Study design&#10;Theoretical framework&#10;Population characteristics&#10;Definition of [concept]&#10;Key findings&#10;Limitations noted"></textarea>
+            <label class="fl">Charting Process</label>
+            <div class="fh">How will you pilot and refine the form?</div>
+            <textarea id="w-chart-proc" data-field="charting_process" rows="3" placeholder="e.g., Two reviewers independently chart the first 5 sources, then meet to refine before proceeding..."></textarea>
+        </div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Too many variables.</strong> Chart what you need to answer your question. Every additional variable multiplies extraction time across all sources.</li><li><strong>Not piloting the form.</strong> Test on 3–5 diverse sources before full extraction. You'll discover ambiguous variables immediately.</li><li><strong>Extracting outcomes like a systematic review.</strong> In scoping reviews, you're mapping the landscape — chart how concepts are defined and studied, not effect sizes.</li><li><strong>Inconsistent charting between reviewers.</strong> Create clear operational definitions for each variable. "Study design" means different things to different people.</li></ul></div></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Synthesis →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 7: SYNTHESIS ===== -->
+<div class="step-view" data-title="Synthesis & Reporting">
+    <div class="step-hdr"><div class="step-phase">Phase 3 · Analysis</div><h2>Synthesis &amp; Reporting</h2><p>Make sense of the landscape you've mapped and present it clearly.</p></div>
+    <div class="step-body">
+        <h3>Two Complementary Approaches</h3>
+        <div class="card-grid">
+            <div class="card card-accent"><h4>📊 Numerical Summary</h4><p>Tables and charts: distribution by year, country, methodology, population, discipline.</p></div>
+            <div class="card card-accent"><h4>📝 Thematic Synthesis</h4><p>Key themes, patterns, and gaps. Goes beyond counting to interpret the evidence.</p></div>
+        </div>
+        <h3>PRISMA-ScR Flow Diagram</h3>
+        <p>Required in every scoping review. Shows how sources moved through identification → screening → inclusion.</p>
+        <div class="flow">
+            <div class="fb fb-p" style="min-width:300px">Records identified (n = ___)</div><div class="fa">↓</div>
+            <div class="fb fb-o" style="min-width:300px">After duplicates removed (n = ___)</div><div class="fa">↓</div>
+            <div class="fr"><div class="fb fb-s" style="min-width:200px">Screened (n = ___)</div><div class="fs">Excluded (n = ___)</div></div><div class="fa">↓</div>
+            <div class="fr"><div class="fb fb-p" style="min-width:200px">Full-text assessed (n = ___)</div><div class="fs">Excluded with reasons (n = ___)</div></div><div class="fa">↓</div>
+            <div class="fb fb-h" style="min-width:300px">Included in review (n = ___)</div>
+        </div>
+        <div class="workspace"><h4>✍️ Plan Your Synthesis</h4>
+            <label class="fl">How will you present results?</label>
+            <div class="fh">Describe numerical summaries, thematic analysis, and any visualizations.</div>
+            <textarea id="w-synthesis" data-field="synthesis" rows="4" placeholder="e.g., (1) Characteristics table for all sources; (2) bar charts by year, country, method; (3) thematic narrative organized around key themes; (4) PRISMA flow diagram."></textarea>
+            <label class="fl">Stakeholder Consultation (Optional — Arksey &amp; O'Malley Stage 6)</label>
+            <div class="fh">Will you consult practitioners, policymakers, or community members? If so, how and when?</div>
+            <textarea id="w-stakeholders" data-field="stakeholders" rows="3" placeholder="e.g., We will convene an expert panel of 5 practitioners to review preliminary findings... OR: This optional stage will not be included because..."></textarea>
+        </div>
+        <div class="pitfall-toggle"><button class="pitfall-btn" onclick="togPitfall(this)"><span class="arrow">▶</span> ⚠️ Common Pitfalls at This Stage</button><div class="pitfall-body"><ul><li><strong>Only presenting numbers.</strong> Tables and charts are necessary but not sufficient. Thematic narrative synthesis is where you interpret what the evidence means collectively.</li><li><strong>Treating it like a systematic review.</strong> Don't calculate effect sizes or make effectiveness claims. Scoping reviews map; they don't pool.</li><li><strong>Forgetting the PRISMA flow diagram.</strong> This is required, not optional. Covidence generates one automatically from your screening data.</li><li><strong>Not linking back to objectives.</strong> Your synthesis should directly answer the questions stated in your protocol. Every table and theme should connect to a PCC element.</li></ul></div></div>
+        <div class="card card-warn"><h4>📌 IRB Note</h4><p>If stakeholder consultation involves collecting new data from human participants, consult <a href="https://irb.tulane.edu/" target="_blank">Tulane's IRB</a> early.</p></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: PRISMA-ScR Checklist →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 8: PRISMA CHECKLIST ===== -->
+<div class="step-view" data-title="PRISMA-ScR Checklist">
+    <div class="step-hdr"><div class="step-phase">Phase 4 · Writing</div><h2>PRISMA-ScR Reporting Checklist</h2><p>Track your reporting completeness — 20 essential and 2 optional items.</p></div>
+    <div class="step-body">
+        <h3>About PRISMA-ScR</h3>
+        <p>The PRISMA-ScR checklist (Tricco et al., 2018) provides minimum reporting items for scoping reviews. Journals increasingly require a completed checklist with submission. Use this tracker as you write.</p>
+        <div class="cprog"><div class="cprog-f" id="pBar" style="width:0%"></div></div>
+        <div class="ccnt"><span id="pCnt">0</span> of 22 items addressed</div>
+        <ul class="cl" id="pList">
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>1. Title</strong> — Identify as a scoping review</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>2. Structured summary</strong> — Background, objectives, methods, results, conclusions</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>3. Rationale</strong> — Context of what is already known</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>4. Objectives</strong> — Explicit objectives and review question(s)</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>5. Protocol &amp; registration</strong> — Protocol location, registration info</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>6. Eligibility criteria</strong> — Inclusion/exclusion specifications</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>7. Information sources</strong> — All sources searched, date of last search</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>8. Search</strong> — Full strategy for at least one database</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>9. Selection of sources</strong> — Process for selecting sources</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>10. Data charting</strong> — Methods of charting, any piloting</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>11. Data items</strong> — All variables sought</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>12. Critical appraisal</strong> — Methods, if done <span class="tag ty">optional</span></span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>13. Synthesis methods</strong> — How data were handled/summarized</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>14. Source selection results</strong> — Numbers at each stage + flow diagram</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>15. Source characteristics</strong> — Characteristics of each source</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>16. Appraisal results</strong> — If done <span class="tag ty">optional</span></span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>17. Individual results</strong> — Charted data for each source</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>18. Synthesis of results</strong> — Main findings summarized</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>19. Summary of evidence</strong> — Link to objectives</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>20. Limitations</strong> — Review process limitations</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>21. Conclusions</strong> — Interpretation and implications</span></li>
+            <li onclick="togCL(this)"><input type="checkbox"><span><strong>22. Funding</strong> — Sources and funder roles</span></li>
+        </ul>
+        <div class="card card-info" style="margin-top:16px"><h4>Reference</h4><p>Tricco et al. (2018). PRISMA-ScR. <em>Ann Intern Med</em>, 169(7), 467–473. <a href="https://www.acpjournals.org/doi/10.7326/M18-0850" target="_blank">Article →</a> | <a href="https://www.prisma-statement.org/scoping" target="_blank">PRISMA site →</a></p></div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back</button><button class="btn btn-p" onclick="next()">Next: Your Protocol →</button></div>
+    </div>
+</div>
+
+<!-- ===== STEP 9: PROTOCOL ===== -->
+<div class="step-view" data-title="Your Protocol Draft">
+    <div class="step-hdr"><div class="step-phase">Phase 4 · Writing</div><h2>Your Scoping Review Protocol</h2><p>Everything you've written, compiled into a working draft.</p></div>
+    <div class="step-body">
+        <h3>Review &amp; Export</h3>
+        <p>This compiles all workspace entries from the guide. Review, then copy or print for registration on <a href="https://osf.io/" target="_blank">OSF</a> or to share with your team.</p>
+        <div class="btns" style="margin-bottom:18px">
+            <button class="btn btn-p" onclick="compile()">📄 Compile Protocol</button>
+            <button class="btn btn-g" onclick="copyProto()">📋 Copy to Clipboard</button>
+            <button class="btn btn-g" onclick="window.print()">🖨️ Print</button>
+            <button class="btn btn-g" onclick="saveToFile()">💾 Save Progress to File</button>
+        </div>
+
+        <h3>📌 Quick-Reference Card</h3>
+        <p style="font-size:.88rem;color:var(--text-soft);margin-bottom:4px">A one-page summary of your key decisions. Print this to keep at your desk.</p>
+        <div class="qref" id="qrefCard">
+            <div class="qref-h"><span>Scoping Review — Key Decisions at a Glance</span><button class="btn btn-g" style="padding:4px 12px;font-size:.78rem;color:#fff;border-color:rgba(255,255,255,.4)" onclick="buildQref()">Refresh</button></div>
+            <div class="qref-body" id="qrefBody">
+                <p style="font-size:.88rem;color:var(--text-faint);text-align:center;padding:16px 0">Click "Refresh" or navigate here to populate from your workspaces.</p>
+            </div>
+        </div>
+        <div id="proto-out">
+            <div class="pdoc">
+                <div class="pdoc-h"><span>Scoping Review Protocol Draft</span><span style="font-size:.8rem;font-weight:400;opacity:.8">Tulane University Libraries</span></div>
+                <div class="pdoc-b" id="proto-body"></div>
+            </div>
+        </div>
+        <h3 style="margin-top:30px">Next Steps</h3>
+        <div class="card-grid">
+            <div class="card card-tip"><h4>1. Refine with your team</h4><p>Share with advisor, co-reviewers, and librarian.</p></div>
+            <div class="card card-tip"><h4>2. Register on OSF</h4><p><a href="https://osf.io/" target="_blank">Open Science Framework</a> for transparency.</p></div>
+            <div class="card card-tip"><h4>3. Meet a librarian</h4><p><a href="https://libguides.tulane.edu/systematicreviews" target="_blank">Request a consultation</a> for search strategy.</p></div>
+            <div class="card card-tip"><h4>4. Begin searching</h4><p>Run searches, export, import to Covidence/Rayyan.</p></div>
+        </div>
+        <h3>Key References</h3>
+        <div class="card">
+            <p><strong>Arksey &amp; O'Malley</strong> (2005). Scoping studies: Towards a methodological framework. <em>Int J Soc Res Methodol</em>, 8(1), 19–32. <a href="https://doi.org/10.1080/1364557032000119616" target="_blank">DOI →</a></p>
+            <p><strong>Levac, Colquhoun, &amp; O'Brien</strong> (2010). Scoping studies: Advancing the methodology. <em>Implement Sci</em>, 5(1), 69. <a href="https://doi.org/10.1186/1748-5908-5-69" target="_blank">DOI →</a></p>
+            <p><strong>Tricco et al.</strong> (2018). PRISMA-ScR. <em>Ann Intern Med</em>, 169(7), 467–473. <a href="https://doi.org/10.7326/M18-0850" target="_blank">DOI →</a></p>
+            <p><strong>Peters et al.</strong> (2015). Guidance for conducting systematic scoping reviews. <em>Int J Evid Based Healthc</em>, 13(3), 141–146.</p>
+            <p><strong>JBI Manual</strong> — Ch. 11: Scoping Reviews. <a href="https://jbi-global-wiki.refined.site/space/MANUAL/355862599" target="_blank">Access →</a></p>
+            <p><strong>Covidence.</strong> Protocol Development for Scoping Reviews. <a href="https://www.covidence.org/wp-content/uploads/2025/11/a_practical_guide_protocol_scoping_reviews_covidence.pdf" target="_blank">PDF →</a></p>
+        </div>
+        <div class="card card-accent" style="text-align:center;padding:24px;margin-top:20px">
+            <h4>Need Help?</h4>
+            <p>Scholarly Engagement · Howard-Tilton Memorial Library</p>
+            <div class="btns" style="justify-content:center">
+                <a href="https://libguides.tulane.edu/systematicreviews" target="_blank" class="btn btn-p" style="text-decoration:none">Request a Consultation</a>
+                <a href="https://library.tulane.edu/spotlight/creating-scoping-systematic-reviews" target="_blank" class="btn btn-g" style="text-decoration:none">View Workshops</a>
+            </div>
+        </div>
+        <div class="snav"><button class="btn btn-g" onclick="prev()">← Back to Checklist</button><div></div></div>
+    </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+const steps=document.querySelectorAll('.step-view'),sel=document.getElementById('stepSelect');
+let cur=0,saved={};
+steps.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=`${i+1}. ${s.dataset.title}`;sel.appendChild(o)});
+
+/* === NAVIGATION === */
+function goTo(n){
+    n=Math.max(0,Math.min(n,steps.length-1));
+    // Save current step fields before leaving
+    steps[cur].querySelectorAll('[data-field]').forEach(el=>{saved[el.dataset.field]=el.value});
+    steps.forEach(s=>s.classList.remove('active'));
+    steps[n].classList.add('active');
+    cur=n;sel.value=n;
+    document.getElementById('pageNum').textContent=`${n+1}/${steps.length}`;
+    document.getElementById('prevBtn').disabled=n===0;
+    document.getElementById('nextBtn').disabled=n===steps.length-1;
+    document.getElementById('progBar').style.width=`${(n/(steps.length-1))*100}%`;
+    window.scrollTo({top:0,behavior:'smooth'});
+    // Restore fields on new step
+    steps[n].querySelectorAll('[data-field]').forEach(el=>{if(saved[el.dataset.field]!==undefined)el.value=saved[el.dataset.field]});
+    // Auto-carry-forward: populate search terms from PCC if empty
+    if(n===4){carryForward()}
+    // Auto-build quick ref when reaching protocol step
+    if(n===steps.length-1){buildQref()}
+}
+function next(){goTo(cur+1)}
+function prev(){goTo(cur-1)}
+document.addEventListener('keydown',e=>{if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName))return;if(e.key==='ArrowRight'){e.preventDefault();next()}if(e.key==='ArrowLeft'){e.preventDefault();prev()}});
+document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.field)saved[e.target.dataset.field]=e.target.value});
+goTo(0);
+
+/* === AUTO-CARRY-FORWARD === */
+function carryForward(){
+    const sp=document.getElementById('w-search-pop'),sc=document.getElementById('w-search-concept'),sx=document.getElementById('w-search-context');
+    if(!sp.value.trim()&&saved.pcc_pop){sp.value='"'+saved.pcc_pop+'"';saved.search_pop=sp.value}
+    if(!sc.value.trim()&&saved.pcc_concept){sc.value='"'+saved.pcc_concept+'"';saved.search_concept=sc.value}
+    if(!sx.value.trim()&&saved.pcc_context){sx.value='"'+saved.pcc_context+'"';saved.search_context=sx.value}
+}
+
+/* === PILL TOGGLE === */
+function togPill(el){el.classList.toggle('on')}
+
+/* === PITFALL TOGGLE === */
+function togPitfall(btn){
+    const arrow=btn.querySelector('.arrow'),body=btn.nextElementSibling;
+    arrow.classList.toggle('open');
+    body.classList.toggle('open');
+}
+
+/* === PCC EXAMPLES === */
+function fillExample(pop,concept,context){document.getElementById('w-pcc-pop').value=pop;document.getElementById('w-pcc-concept').value=concept;document.getElementById('w-pcc-context').value=context;saved.pcc_pop=pop;saved.pcc_concept=concept;saved.pcc_context=context;genPCC();document.getElementById('w-pcc-pop').scrollIntoView({behavior:'smooth',block:'center'})}
+
+function genPCC(){const p=document.getElementById('w-pcc-pop').value.trim(),c=document.getElementById('w-pcc-concept').value.trim(),x=document.getElementById('w-pcc-context').value.trim(),o=document.getElementById('pcc-out');if(!p&&!c&&!x){o.style.display='none';return}let q='What is known about ';q+=c?`<strong>${c}</strong>`:'[concept]';if(p)q+=` among <strong>${p}</strong>`;if(x)q+=` in <strong>${x}</strong>`;q+='?';o.innerHTML=`<div style="font-size:1rem;margin-bottom:10px"><strong>Draft:</strong> ${q}</div><div><span class="tag tg">P: ${p||'—'}</span> <span class="tag tb">C: ${c||'—'}</span> <span class="tag ty">Ctx: ${x||'—'}</span></div>`;o.style.display='block';const qf=document.getElementById('w-question'),plain=`What is known about ${c||'[concept]'}${p?' among '+p:''}${x?' in '+x:''}?`;if(!qf.value.trim()){qf.value=plain;saved.question=plain}}
+
+/* === SEARCH PREVIEW === */
+function previewSearch(){const p=document.getElementById('w-search-pop').value.trim(),c=document.getElementById('w-search-concept').value.trim(),x=document.getElementById('w-search-context').value.trim(),o=document.getElementById('search-out');if(!p&&!c&&!x){o.style.display='none';return}let parts=[];if(p)parts.push(`( ${p} )`);if(c)parts.push(`( ${c} )`);if(x)parts.push(`( ${x} )`);o.textContent=parts.join('\n  AND\n');o.style.display='block'}
+
+/* === PRISMA CHECKLIST === */
+function togCL(li){const cb=li.querySelector('input[type="checkbox"]');cb.checked=!cb.checked;li.querySelector('span').classList.toggle('x',cb.checked);const t=document.querySelectorAll('#pList input').length,d=document.querySelectorAll('#pList input:checked').length;document.getElementById('pBar').style.width=`${(d/t)*100}%`;document.getElementById('pCnt').textContent=d}
+
+/* === TIMELINE ESTIMATOR === */
+function calcTimeline(){
+    const team=+document.getElementById('tl-team').value;
+    const dbs=+document.getElementById('tl-dbs').value;
+    const results=+document.getElementById('tl-results').value;
+    // Base weeks per phase
+    let planning=3,searching=3,screening=4,charting=3,synthesis=3;
+    // Adjust for complexity
+    if(dbs>=5){searching+=1}if(dbs>=8){searching+=2}
+    if(results>=1500){screening+=2}if(results>=4000){screening+=4;charting+=2}if(results>=8000){screening+=6;charting+=4}
+    if(team>=3){screening=Math.ceil(screening*.7);charting=Math.ceil(charting*.75)}
+    if(team<=1){screening=Math.ceil(screening*1.5);charting=Math.ceil(charting*1.3)}
+    const total=planning+searching+screening+charting+synthesis;
+    const months=Math.round(total/4.3*10)/10;
+    const phases=[
+        {name:'Planning',wk:planning,color:'var(--green)'},
+        {name:'Searching',wk:searching,color:'var(--shutters)'},
+        {name:'Screening',wk:screening,color:'var(--blue)'},
+        {name:'Charting',wk:charting,color:'var(--olive)'},
+        {name:'Synthesis',wk:synthesis,color:'var(--gold)'}
+    ];
+    document.getElementById('tlPhases').innerHTML=phases.map(p=>`<div class="tl-phase" style="background:${p.color};flex:${p.wk}"><span>${p.wk} wk</span>${p.name}</div>`).join('');
+    document.getElementById('tlTotal').textContent=`Total: ~${total} weeks (${months} months)`;
+    document.getElementById('tlResult').style.display='block';
+}
+
+/* === SAVE / LOAD === */
+function showSaveStatus(msg){const s=document.getElementById('saveStatus');s.textContent='✓ '+msg;s.classList.add('show');setTimeout(()=>s.classList.remove('show'),2500)}
+
+function saveToFile(){
+    // Gather all current values
+    document.querySelectorAll('[data-field]').forEach(el=>{saved[el.dataset.field]=el.value});
+    const pills=[];document.querySelectorAll('#srcTypes .pill.on').forEach(p=>pills.push(p.dataset.val));
+    const data={saved,pills,step:cur,timestamp:new Date().toISOString()};
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download=`scoping_review_progress_${new Date().toISOString().slice(0,10)}.json`;
+    a.click();URL.revokeObjectURL(a.href);
+    showSaveStatus('Saved to file');
+}
+
+function loadFromFile(e){
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=function(ev){
+        try{
+            const data=JSON.parse(ev.target.result);
+            if(data.saved){saved=data.saved}
+            // Restore pill states
+            if(data.pills){
+                document.querySelectorAll('#srcTypes .pill').forEach(p=>{
+                    if(data.pills.includes(p.dataset.val)){p.classList.add('on')}else{p.classList.remove('on')}
+                });
+            }
+            // Restore all fields
+            document.querySelectorAll('[data-field]').forEach(el=>{
+                if(saved[el.dataset.field]!==undefined)el.value=saved[el.dataset.field];
+            });
+            // Go to saved step
+            if(data.step!==undefined){goTo(data.step)}
+            showSaveStatus('Loaded from file');
+        }catch(err){alert('Could not read file. Please select a valid progress file (.json).')}
+    };
+    reader.readAsText(file);
+    e.target.value='';// Reset so same file can be reloaded
+}
+
+/* === QUICK REFERENCE CARD === */
+function buildQref(){
+    document.querySelectorAll('[data-field]').forEach(el=>{saved[el.dataset.field]=el.value});
+    const src=[];document.querySelectorAll('#srcTypes .pill.on').forEach(p=>src.push(p.dataset.val));
+    const rows=[
+        ['Research Question',saved.question],
+        ['Population',saved.pcc_pop],
+        ['Concept',saved.pcc_concept],
+        ['Context',saved.pcc_context],
+        ['Inclusion',saved.inclusion],
+        ['Exclusion',saved.exclusion],
+        ['Source Types',src.join(', ')],
+        ['Date Range',(saved.date_start||'?')+'–'+(saved.date_end||'?')],
+        ['Language(s)',saved.language],
+        ['Databases',saved.databases],
+        ['Screening Tool',saved.screening?(saved.screening.match(/covidence|rayyan/i)||['Not specified'])[0]:''],
+        ['# Reviewers',saved.screening?(saved.screening.match(/(\d+)\s*reviewer/i)||['','?'])[1]+' reviewers':''],
+    ];
+    document.getElementById('qrefBody').innerHTML=rows.map(r=>{
+        const val=r[1]&&r[1].trim()&&r[1]!=='?–?'?r[1]:'';
+        return `<div class="qref-row"><span class="qref-label">${r[0]}</span><span class="${val?'qref-val':'qref-empty'}">${val||'Not yet entered'}</span></div>`;
+    }).join('');
+}
+
+/* === PROTOCOL COMPILER === */
+function compile(){document.querySelectorAll('[data-field]').forEach(el=>{saved[el.dataset.field]=el.value});const src=[];document.querySelectorAll('#srcTypes .pill.on').forEach(p=>src.push(p.dataset.val));const f=[{k:'question',l:'Research Question',s:'Question & Rationale'},{k:'rationale',l:'Rationale',s:'Question & Rationale'},{k:'pcc_pop',l:'Population',s:'PCC Framework'},{k:'pcc_concept',l:'Concept',s:'PCC Framework'},{k:'pcc_context',l:'Context',s:'PCC Framework'},{k:'inclusion',l:'Inclusion Criteria',s:'Eligibility'},{k:'exclusion',l:'Exclusion Criteria',s:'Eligibility'},{k:'date_start',l:'Date Start',s:'Eligibility'},{k:'date_end',l:'Date End',s:'Eligibility'},{k:'language',l:'Language(s)',s:'Eligibility'},{k:'search_pop',l:'Population Terms',s:'Search Strategy'},{k:'search_concept',l:'Concept Terms',s:'Search Strategy'},{k:'search_context',l:'Context Terms',s:'Search Strategy'},{k:'databases',l:'Databases & Sources',s:'Search Strategy'},{k:'screening',l:'Screening Process',s:'Source Selection'},{k:'charting_vars',l:'Variables',s:'Data Charting'},{k:'charting_process',l:'Process',s:'Data Charting'},{k:'synthesis',l:'Synthesis Plan',s:'Synthesis & Reporting'},{k:'stakeholders',l:'Stakeholder Consultation',s:'Stakeholders'}];let h='',ps='';f.forEach(x=>{if(x.s!==ps){h+=`<h4 style="color:var(--shutters);margin:18px 0 6px;font-size:.88rem;text-transform:uppercase;letter-spacing:.5px">${x.s}</h4>`;ps=x.s}const v=saved[x.k]||'';h+=`<div class="ps"><strong>${x.l}</strong><p>${v?v.replace(/\n/g,'<br>'):'<span class="ps-e">Not yet completed</span>'}</p></div>`});if(src.length)h+=`<div class="ps"><strong>Source Types</strong><p>${src.join(', ')}</p></div>`;
+/* Build example search strings from entered terms */
+const sp=saved.search_pop||'',sc=saved.search_concept||'',sx=saved.search_context||'';
+if(sp||sc||sx){h+=`<h4 style="color:var(--shutters);margin:18px 0 6px;font-size:.88rem;text-transform:uppercase;letter-spacing:.5px">Example Search Strings</h4>`;
+let parts=[];if(sp)parts.push(`( ${sp} )`);if(sc)parts.push(`( ${sc} )`);if(sx)parts.push(`( ${sx} )`);
+const combined=parts.join(' AND ');
+h+=`<div class="ps" style="border-left-color:var(--gold)"><strong>Combined Boolean Search (adapt syntax per database)</strong><p style="font-family:monospace;font-size:.85rem;background:var(--green-dk);color:var(--blue);padding:12px;border-radius:6px;margin-top:6px">${combined}</p></div>`;
+h+=`<div class="ps" style="border-left-color:var(--olive)"><strong>Database-Specific Notes</strong><p style="font-size:.88rem"><strong>Web of Science / Scopus:</strong> Use the combined string above in "Advanced Search." Use TS= (topic) in WoS or TITLE-ABS-KEY in Scopus.<br><br>`;
+h+=`<strong>PsycINFO / ERIC (EBSCOhost):</strong> Use the combined string in "Advanced Search." Map key terms to thesaurus descriptors where available (e.g., DE "mentoring" in PsycINFO).<br><br>`;
+h+=`<strong>Sociological Abstracts (ProQuest):</strong> Use MAINSUBJECT() for controlled vocabulary and noft() for keyword searching. Adapt OR/AND structure to ProQuest syntax.<br><br>`;
+h+=`<strong>Google Scholar (supplementary):</strong> Use a simplified version — Google Scholar doesn't support complex Boolean. Search key phrase combinations and review first 200 results.</p></div>`}
+document.getElementById('proto-body').innerHTML=h;document.getElementById('proto-out').style.display='block';document.getElementById('proto-out').scrollIntoView({behavior:'smooth'})}
+
+function copyProto(){if(document.getElementById('proto-out').style.display==='none')compile();const t=document.getElementById('proto-body').innerText;navigator.clipboard.writeText('SCOPING REVIEW PROTOCOL DRAFT\n'+'='.repeat(40)+'\n\n'+t).then(()=>{event.target.textContent='✓ Copied!';setTimeout(()=>event.target.textContent='📋 Copy to Clipboard',2000)})}
+</script>
+</body>
+</html>
