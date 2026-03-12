@@ -1,7 +1,7 @@
 # Scoping Review Walkthrough Guide
 
 **Tulane University Libraries — Howard-Tilton Memorial Library**
-Scholarly Engagement & Resources
+Scholarly Engagement
 
 ---
 
@@ -94,10 +94,9 @@ The guide contains **10 steps** organized across **4 phases**:
 ## Tulane Resources Linked Throughout
 
 - [Systematic Review Service](https://libguides.tulane.edu/systematicreviews) — Basic consultations (90 min) and full collaborative partnerships
-- [Scoping & Systematic Review Workshops](https://library.tulane.edu/spotlight/creating-scoping-systematic-reviews)
 - [Databases A–Z](https://library.tulane.edu/resources/databases)
 - [Scoping Reviews LibGuide](https://libguides.tulane.edu/ph/sr)
-- [Tulane IRB](https://irb.tulane.edu/) — For stakeholder consultation involving human participants
+- [Tulane IRB]([https://irb.tulane.edu/](https://research.tulane.edu/hrpo)) — For stakeholder consultation involving human participants
 
 ---
 
@@ -124,6 +123,5 @@ The guide contains **10 steps** organized across **4 phases**:
 
 ## Contact
 
-**Scholarly Engagement Team**
-Howard-Tilton Memorial Library, Tulane University
-[libguides.tulane.edu/systematicreviews](https://libguides.tulane.edu/systematicreviews)
+Reach out to Kay P Maye (kmaye@tulane.edu) with any questions.
+
